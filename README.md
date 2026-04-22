@@ -1,25 +1,14 @@
 📊 Amazon Weekly Business Review (WBR) Automation Dashboard
 
-A lightweight, interactive web-based dashboard designed to automate **Weekly Business Review (WBR)** reporting by transforming raw Excel/CSV data into actionable insights — entirely in the browser.
+> ⚡ Built as a real-world simulation of Amazon-style WBR reporting system to automate weekly operations analysis
+
+A real-world operations analytics dashboard that automates Weekly Business Review (WBR) reporting by transforming raw Excel/CSV data into actionable insights — entirely in the browser.
 
 ## 🔗 Live Demo
 👉 https://ruthwickkalahasti.github.io/Weekly_Business_Review_Dashboard/
 
 ---
 
-## 🚀 Overview
-
-This project replicates a real-world **Amazon-style WBR reporting workflow**, where large operational datasets are manually analyzed each week.
-
-👉 This tool automates that process by:
-
-* Parsing Excel/CSV files instantly
-* Generating KPI metrics & visual insights
-* Enabling dynamic filtering and drill-down
-
-⚡ Result: **Reduced manual reporting effort by ~4 hours**
-
----
 
 ## ⚠️ Problem Statement
 
@@ -38,6 +27,21 @@ This project solves these challenges by automating the entire workflow.
 - ⚡ Enabled instant KPI generation from raw data
 - 📊 Improved visibility into backlog and performance metrics
 - 📉 Reduced dependency on manual Excel analysis
+- ⚡ Fully client-side processing ensures instant load time and zero backend dependency
+
+---
+
+## 🚀 Overview
+
+This project replicates a real-world **Amazon-style WBR reporting workflow**, where large operational datasets are manually analyzed each week.
+
+👉 This tool automates that process by:
+
+* Parsing Excel/CSV files instantly
+* Generating KPI metrics & visual insights
+* Enabling dynamic filtering and drill-down
+
+⚡ Result: **Reduced manual reporting effort by ~4 hours**
 
 ---
 
@@ -50,6 +54,7 @@ This project solves these challenges by automating the entire workflow.
 5. Charts and tables are rendered using Chart.js
 6. Filters update all components in real-time
 7. Users can export filtered data as CSV
+8. Maintains global state in JavaScript to synchronize filters, KPIs, and charts efficiently
 
 ---
 ## 🚀 Future Improvements
@@ -156,7 +161,7 @@ Built using **Chart.js**:
 1. Clone repository:
 
    ```bash
-   git clone https://github.com/yourusername/wbr-dashboard.git
+   git clone https://github.com/RuthwickKalahasti/Weekly_Business_Review_Dashboard.git
    ```
 
 2. Open:
