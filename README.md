@@ -1,4 +1,4 @@
-<img width="1843" height="613" alt="image" src="https://github.com/user-attachments/assets/33396865-9595-406a-8c71-e7858b7c2911" /># 📊 Amazon Weekly Business Review (WBR) Automation Dashboard
+📊 Amazon Weekly Business Review (WBR) Automation Dashboard
 
 A lightweight, interactive web-based dashboard designed to automate **Weekly Business Review (WBR)** reporting by transforming raw Excel/CSV data into actionable insights — entirely in the browser.
 
@@ -102,6 +102,7 @@ Built using **Chart.js**:
 
 <img width="1855" height="599" alt="image" src="https://github.com/user-attachments/assets/832b3225-34c4-42cb-947b-233f3f82a910" />
 
+<img width="1856" height="805" alt="image" src="https://github.com/user-attachments/assets/b19814cd-9dcd-42fc-89e2-9584416f4d1b" />
 
 
 ---
