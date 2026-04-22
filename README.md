@@ -2,6 +2,9 @@
 
 A lightweight, interactive web-based dashboard designed to automate **Weekly Business Review (WBR)** reporting by transforming raw Excel/CSV data into actionable insights — entirely in the browser.
 
+## 🔗 Live Demo
+👉 https://ruthwickkalahasti.github.io/Weekly_Business_Review_Dashboard/
+
 ---
 
 ## 🚀 Overview
@@ -17,6 +20,47 @@ This project replicates a real-world **Amazon-style WBR reporting workflow**, wh
 ⚡ Result: **Reduced manual reporting effort by ~4 hours**
 
 ---
+
+## ⚠️ Problem Statement
+
+Weekly Business Review (WBR) reporting in operations teams is typically:
+- Manual and time-consuming
+- Excel-heavy with repetitive calculations
+- Prone to human errors
+- Lacking real-time insights
+
+This project solves these challenges by automating the entire workflow.
+
+---
+## 💥 Impact
+
+- ⏱️ Reduced manual reporting effort by ~4 hours per cycle
+- ⚡ Enabled instant KPI generation from raw data
+- 📊 Improved visibility into backlog and performance metrics
+- 📉 Reduced dependency on manual Excel analysis
+
+---
+
+## ⚙️ How It Works
+
+1. User uploads Excel/CSV file
+2. SheetJS parses data into JSON
+3. Data is processed and structured in JavaScript
+4. KPIs are calculated dynamically
+5. Charts and tables are rendered using Chart.js
+6. Filters update all components in real-time
+7. Users can export filtered data as CSV
+
+---
+## 🚀 Future Improvements
+
+- Dark mode support
+- Backend integration for persistent storage
+- User authentication & role-based dashboards
+- Advanced drill-down analytics
+
+---
+
 
 ## ✨ Key Features
 
