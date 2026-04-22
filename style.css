@@ -1,0 +1,668 @@
+/* 🌈 GLOBAL */
+:root {
+  --bg-color: #f4f7fa;
+  --text-main: #333333;
+  --text-muted: #777777;
+  --card-bg: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* 🔥 DARK MODE VARIABLES */
+body.dark-mode {
+  --bg-color: #121212;
+  --text-main: #e0e0e0;
+  --text-muted: #a0a0a0;
+  --card-bg: #1e1e1e;
+}
+
+/* Adjust components for Dark Mode */
+body.dark-mode .table-container,
+body.dark-mode .filters-container,
+body.dark-mode .card,
+body.dark-mode .chart-card,
+body.dark-mode .upload-box {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  border-color: #333;
+}
+
+body.dark-mode .filter-group select {
+  background: #2a2a2a;
+  color: #e0e0e0;
+  border-color: #444;
+}
+
+body.dark-mode #dataTable thead {
+  background: #2a2a2a;
+}
+
+body.dark-mode #dataTable th, 
+body.dark-mode #dataTable td {
+  border-bottom: 1px solid #333;
+}
+
+body.dark-mode #dataTable tbody tr:hover {
+  background: #2a2a2a;
+}
+
+/* 🌙 THEME BUTTON STYLES */
+.theme-btn {
+  background: var(--card-bg);
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  position: absolute;
+  right: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+body.dark-mode .theme-btn {
+  border-color: #444;
+  background: #2a2a2a;
+}
+
+.theme-btn:hover {
+  transform: scale(1.1);
+}
+
+/* 🧭 HEADER */
+.header {
+  text-align: center;
+  padding: 40px 20px 10px;
+}
+
+.header h1 {
+  font-size: 38px;
+  font-weight: 800;
+  color: #2e7d32;
+  margin: 0 0 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.header p {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* 📁 UPLOAD BOX (Dashed Green Border) */
+.upload-box {
+  max-width: 650px; /* Keeps it neatly contained in the center */
+  margin: 0 auto 40px;
+  padding: 40px 20px;
+  background: var(--card-bg, #ffffff);
+  /* 🔥 Creates the dashed green border */
+  border: 2px dashed #81c784; 
+  border-radius: 16px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+/* Optional: Makes the box react slightly when you hover over it */
+.upload-box:hover {
+  border-color: #4CAF50;
+  background-color: #f9fdfa;
+}
+
+.upload-box h3 {
+  margin: 0 0 8px 0;
+  color: #222;
+}
+
+.upload-box p {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.custom-upload {
+  display: inline-block;
+  padding: 12px 28px;
+  background: #4caf50;
+  color: white;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.custom-upload:hover {
+  background: #388e3c;
+  transform: scale(1.02);
+}
+
+#fileName {
+  margin-top: 15px;
+  margin-bottom: 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+}
+/* 2. DASHBOARD GRID (KPI Cards) */
+.dashboard {
+  max-width: 1200px; /* 🔥 Unified to 1200px */
+  width: 100%;
+  margin: 30px auto;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)); 
+  gap: 24px;
+  padding: 0; /* 🔥 Removed side padding so outer edges align perfectly */
+}
+
+/* Make it responsive */
+@media (max-width: 1024px) {
+  .dashboard {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* 🧾 CARD */
+.card {
+  background: var(--card-bg, #ffffff);
+  border-radius: 12px;
+  padding: 20px 15px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  border-top: 4px solid transparent;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.card h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  margin: 0 0 15px 0;
+  line-height: 1.4;
+}
+
+.card h1 {
+  font-size: 36px;
+  font-weight: 800;
+  margin: 0;
+  transition: transform 0.3s ease;
+}
+
+.card:hover h1 {
+  transform: scale(1.08);
+}
+
+/* 🎨 UNIQUE CARD COLORS (Border & Text) */
+.card.c1 { border-top-color: #2e7d32; }
+.card.c1 h1 { color: #2e7d32; }
+
+.card.c2 { border-top-color: #f9a825; }
+.card.c2 h1 { color: #f9a825; }
+
+.card.c3 { border-top-color: #e53935; }
+.card.c3 h1 { color: #e53935; }
+
+.card.c4 { border-top-color: #1e88e5; }
+.card.c4 h1 { color: #1e88e5; }
+
+.card.c5 { border-top-color: #8e24aa; }
+.card.c5 h1 { color: #8e24aa; }
+
+.card.c6 { border-top-color: #00897b; }
+.card.c6 h1 { color: #00897b; }
+
+.card.c7 { border-top-color: #4caf50; }
+.card.c7 h1 { color: #4caf50; }
+
+.card.c8 { border-top-color: #546e7a; } /* Blue Grey */
+.card.c8 h1 { color: #546e7a; }
+
+.card.c9 { border-top-color: #8d6e63; } /* Brown */
+.card.c9 h1 { color: #8d6e63; }
+
+/* 📊 CHARTS SECTION */
+/* 🧾 CARD SIZING */
+/* 🧾 CARD */
+.card {
+  background: var(--card-bg, #ffffff);
+  border-radius: 12px;
+  padding: 20px 15px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  border-top: 4px solid transparent;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%; /* 🔥 FIX: Forces all cards to stretch evenly */
+  min-height: 130px; /* 🔥 FIX: Ensures a consistent height baseline */
+}
+
+/* 3. CHARTS SECTION */
+.charts-container {
+  max-width: 1200px; /* 🔥 Unified to 1200px */
+  width: 100%;
+  margin: 0 auto 50px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 24px;
+  padding: 0; /* 🔥 Removed side padding so outer edges align perfectly */
+}
+
+.chart-card {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.chart-card h3 {
+  text-align: center;
+  margin: 0 0 20px 0;
+  color: #444;
+  font-size: 18px;
+}
+
+/* 🔥 THE FIX: Constrain the chart height */
+.chart-wrapper {
+  position: relative;
+  height: 280px; /* This absolutely prevents the giant pie chart */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Ensure canvas doesn't break out */
+.chart-wrapper canvas {
+  max-height: 100% !important;
+  max-width: 100% !important;
+}
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .charts-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 🎛️ FILTERS CONTAINER (Blue Top Border) */
+.filters-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto 30px;
+  background: var(--card-bg, #ffffff);
+  padding: 20px 25px;
+  border-radius: 12px;
+  /* 🔥 Creates the light outline and the thick blue top line */
+  border: 1px solid #e2e8f0;
+  border-top: 4px solid #1e88e5; 
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-group label {
+  font-weight: 600;
+  color: #444;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filter-group select {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fcfcfc;
+  font-family: inherit;
+  font-size: 14px;
+  color: #333;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 150px;
+}
+
+.filter-group select:focus, .filter-group select:hover {
+  border-color: #1e88e5;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+} 
+
+/* 4. INTERACTIVE DATA TABLE */
+.table-container {
+  max-width: 1200px; /* 🔥 Unified to 1200px */
+  width: 100%;
+  margin: 0 auto 50px;
+  background: var(--card-bg, #ffffff);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  animation: fadeIn 0.5s ease;
+}
+
+.table-container h3 {
+  margin: 0 0 15px 0;
+  color: #444;
+  font-size: 18px;
+}
+
+.table-wrapper {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  border-radius: 8px;
+}
+
+#dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+#dataTable thead {
+  background: #f8fbff;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+#dataTable th, #dataTable td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+#dataTable th {
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 12px;
+}
+
+#dataTable tbody tr:hover {
+  background: #f4f8fc;
+  transition: background 0.2s ease;
+}
+
+#dataTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* 🔥 NEW: Pushes the export button to the far right */
+.export-group {
+  margin-left: auto;
+}
+
+/* 📥 EXPORT BUTTON */
+.export-btn {
+  /* margin-top removed so it aligns perfectly */
+  padding: 10px 18px;
+  background: #1e88e5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(30, 136, 229, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.export-btn:hover {
+  background: #1565c0;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(30, 136, 229, 0.3);
+}
+
+.export-btn:active {
+  transform: translateY(0);
+}
+
+/* 🔥 TOP 10 CHART WIDE LAYOUT */
+.full-width-chart {
+  grid-column: 1 / -1; /* Forces the card to span all available columns */
+}
+
+/* ========================================= */
+/* 🌟 NORMAL MODE ENHANCEMENTS (Borders)     */
+/* ========================================= */
+
+/* 1. Add a crisp border to the charts, table, filters, and upload box */
+.chart-card,
+.table-container,
+.filters-container,
+.upload-box {
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* 2. Add borders to the KPI cards (but protect their colored top edges!) */
+.card {
+  border-bottom: 1px solid #e2e8f0;
+  border-left: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* 3. Add a subtle border to the table rows so they are easier to read */
+#dataTable th, 
+#dataTable td {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* 🔥 DARK MODE TEXT VISIBILITY FIXES */
+
+/* 1. Muted text (light gray) for subtitles, card headers, and table columns */
+body.dark-mode .header p,
+body.dark-mode .upload-box p,
+body.dark-mode #fileName,
+body.dark-mode .card h3,
+body.dark-mode #dataTable th {
+  color: #a0a0a0 !important;
+}
+
+/* 2. Bright text (white) for main headings, labels, and table rows */
+body.dark-mode .upload-box h3,
+body.dark-mode .filter-group label,
+body.dark-mode .chart-card h3,
+body.dark-mode .table-container h3,
+body.dark-mode #dataTable td,
+body.dark-mode #dataTable td strong {
+  color: #e0e0e0 !important;
+}
+
+/* 3. Fix dropdown menu options so they don't look invisible on some browsers */
+body.dark-mode .filter-group select option {
+  background-color: #2a2a2a !important;
+  color: #e0e0e0 !important;
+}
+
+/* 🔥 STRICT DARK MODE TEXT FIXES 🔥 */
+
+/* 1. Fix card titles and upload box text (Make them easy-to-read light gray) */
+body.dark-mode .card h3,
+body.dark-mode .upload-box p,
+body.dark-mode #fileName,
+body.dark-mode .header p {
+  color: #b0bec5 !important;
+}
+
+/* 2. Fix main section headers and labels (Make them bright white) */
+body.dark-mode .chart-card h3,
+body.dark-mode .table-container h3,
+body.dark-mode .upload-box h3,
+body.dark-mode .filter-group label {
+  color: #ffffff !important;
+}
+
+/* 3. Ensure dropdown text is visible */
+body.dark-mode .filter-group select {
+  color: #ffffff !important;
+}
+
+/* ========================================= */
+/* 🌙 DARK MODE TEXT VISIBILITY FIXES        */
+/* ========================================= */
+
+/* 1. Bright White Text (Main Titles & Table Rows) */
+body.dark-mode .header h1,
+body.dark-mode .chart-card h3,
+body.dark-mode .table-container h3,
+body.dark-mode .upload-box h3,
+body.dark-mode #dataTable td,
+body.dark-mode #dataTable td strong {
+  color: #ffffff !important;
+}
+
+/* 2. Light Gray Text (Subtitles, Labels, & Card Titles) */
+body.dark-mode .header p,
+body.dark-mode .upload-box p,
+body.dark-mode #fileName,
+body.dark-mode .card h3,
+body.dark-mode .filter-group label,
+body.dark-mode #dataTable th {
+  color: #b0b0b0 !important;
+}
+
+/* 3. Fix the Dropdown Options so they are readable */
+body.dark-mode .filter-group select option {
+  background-color: #2a2a2a !important;
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode .upload-box,
+body.dark-mode .filters-container {
+  border-color: #444; /* Darkens the borders in dark mode */
+}
+body.dark-mode .upload-box {
+  border-style: dashed; /* Keeps the dashed style in dark mode */
+}
+
+/* ========================================= */
+/* 🛡️ BULLETPROOF BORDERS (Forces UI Update) */
+/* ========================================= */
+
+/* 1. Dashed Upload Box */
+.upload-box {
+  border: 2px dashed #81c784 !important; 
+}
+
+/* 2. Filters Container (Solid outline with Blue Top) */
+.filters-container {
+  border: 1px solid #e2e8f0 !important;
+  border-top: 4px solid #1e88e5 !important; 
+}
+
+/* 3. Charts & Tables */
+.chart-card,
+.table-container {
+  border: 1px solid #e2e8f0 !important;
+}
+
+/* 4. KPI Cards (Protects the colored top borders!) */
+.card {
+  border-bottom: 1px solid #e2e8f0 !important;
+  border-left: 1px solid #e2e8f0 !important;
+  border-right: 1px solid #e2e8f0 !important;
+}
+
+/* ----------------------------------------- */
+/* 🌙 DARK MODE ADAPTATIONS FOR THE BORDERS  */
+/* ----------------------------------------- */
+body.dark-mode .upload-box {
+  border-color: #444 !important;
+}
+
+body.dark-mode .filters-container,
+body.dark-mode .chart-card,
+body.dark-mode .table-container {
+  border: 1px solid #333 !important;
+  border-top-color: #333 !important;
+}
+
+body.dark-mode .card {
+  border-bottom-color: #333 !important;
+  border-left-color: #333 !important;
+  border-right-color: #333 !important;
+}
+
+/* ========================================= */
+/* 🎬 BULLETPROOF ANIMATIONS & HOVERS        */
+/* ========================================= */
+
+/* 1. Smooth Hover Effects (Forces the lift and shadow) */
+.chart-card,
+.table-container {
+  transition: all 0.3s ease !important;
+}
+
+.chart-card:hover,
+.table-container:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12) !important;
+  border-color: #bbdefb !important; /* Highlights the border slightly */
+}
+
+body.dark-mode .chart-card:hover,
+body.dark-mode .table-container:hover {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6) !important;
+  border-color: #1e88e5 !important;
+}
+
+/* 2. The Keyframe Animation */
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 3. The trigger class (JavaScript will add this) */
+.animate-pop {
+  animation: slideUpFade 0.6s ease-out forwards !important;
+  opacity: 0; /* Keeps them hidden until the animation starts */
+}

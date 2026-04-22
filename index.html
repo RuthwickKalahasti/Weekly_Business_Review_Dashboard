@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WBR Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+  /* 🔥 ULTIMATE OVERRIDE: Bypassing CSS Cache */
+  .chart-card, 
+  .table-container {
+    border: 1px solid #cfd8dc !important; /* Slightly darker gray to ensure visibility */
+  }
+
+  .upload-box {
+    border: 2px dashed #81c784 !important; 
+  }
+
+  .filters-container {
+    border: 1px solid #cfd8dc !important;
+    border-top: 4px solid #1e88e5 !important; 
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+    <div style="display: flex; justify-content: center; align-items: center; gap: 20px; position: relative; max-width: 1200px; margin: 0 auto;">
+      <h1 style="margin: 0;">📊 WBR Dashboard</h1>
+      <button id="themeToggle" class="theme-btn">🌙</button>
+    </div>
+    <p style="margin-top: 10px;">Upload your WBR file to generate insights</p>
+  </div>
+
+<div class="upload-box">
+    <h3>📁 Upload WBR File</h3>
+    <p>Select your CSV file to generate dashboard</p>
+
+    <label for="fileInput" class="custom-upload">
+      Choose File
+    </label>
+    <input type="file" id="fileInput" hidden accept=".csv, .xlsx, .xls" />
+    <p id="fileName">No file selected</p>
+  </div>
+
+  <div class="filters-container" id="filtersContainer" style="display: none;">
+    
+    <div class="filter-group">
+      <label for="monthFilter">📅 Month:</label>
+      <select id="monthFilter"><option value="all">All Months</option></select>
+    </div>
+
+    <div class="filter-group">
+      <label for="weekFilter">📆 Week:</label>
+      <select id="weekFilter"><option value="all">All Weeks</option></select>
+    </div>
+
+    <div class="filter-group">
+      <label for="statusFilter">📌 Status:</label>
+      <select id="statusFilter"><option value="all">All Statuses</option></select>
+    </div>
+
+    <div class="filter-group">
+      <label for="totalCompletionFilter">🎯 Total %:</label>
+      <select id="totalCompletionFilter">
+        <option value="all">All</option>
+        <option value="100">Complete (100%)</option>
+        <option value="in_progress">In Progress (1-99%)</option>
+        <option value="0">Not Started (0%)</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="postCompletionFilter">📦 Post %:</label>
+      <select id="postCompletionFilter">
+        <option value="all">All</option>
+        <option value="100">Complete (100%)</option>
+        <option value="in_progress">In Progress (1-99%)</option>
+        <option value="0">Not Started (0%)</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="sfhCompletionFilter">🏠 SFH %:</label>
+      <select id="sfhCompletionFilter">
+        <option value="all">All</option>
+        <option value="100">Complete (100%)</option>
+        <option value="in_progress">In Progress (1-99%)</option>
+        <option value="0">Not Started (0%)</option>
+      </select>
+    </div>
+
+
+<div class="filter-group export-group">
+  <button id="exportBtn" class="export-btn">📥 Export Data</button>
+</div>
+
+  </div>
+
+  <div class="dashboard">
+
+    <div class="card c8">
+      <h3>Total Grids</h3>
+      <h1 id="dynamicTotalGrids">-</h1>
+    </div>
+
+    <div class="card c9">
+      <h3>Grids Given by Arun</h3>
+      <h1 id="arunGridsCount">-</h1>
+    </div>
+
+    <div class="card c1">
+      <h3>Grids Processed (100% Complete)</h3>
+      <h1 id="gridsCount">-</h1>
+    </div>
+
+<div class="card c2" id="downloadBacklogCard" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" title="Click to download Backlog Grids">
+      <h3>Grids in Backlog (Post)</h3>
+      <h1 id="backlogPostCount">-</h1> </div>
+
+    <div class="card c3">
+      <h3>SFH Backlog (Not 100%)</h3>
+      <h1 id="sfhBacklogCount">-</h1>
+    </div>
+
+    <div class="card c4">
+      <h3>Total Backlog (Overall)</h3>
+      <h1 id="totalBacklogCount">-</h1>
+    </div>
+
+    <div class="card c5">
+      <h3>Total Pending UPIDs</h3>
+      <h1 id="totalPendingCount">-</h1>
+    </div>
+
+    <div class="card c6">
+      <h3>SFH Pending UPIDs</h3>
+      <h1 id="sfhPendingCount">-</h1>
+    </div>
+
+    <div class="card c7">
+      <h3>Grids with Pending ≤ 20</h3>
+      <h1 id="lowPendingCount">-</h1>
+    </div>
+  </div>
+
+<div class="charts-container">
+  
+  <div class="chart-card">
+    <h3>📊 Backlog Overview</h3>
+    <div class="chart-wrapper">
+      <canvas id="barChart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <h3>📈 Completion Split</h3>
+    <div class="chart-wrapper">
+      <canvas id="pieChart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card full-width-chart">
+      <h3>🚨 Needs Attention (Top 10 Pending Grids)</h3>
+      <div class="chart-wrapper">
+        <canvas id="top10Chart"></canvas>
+      </div>
+    </div>
+
+</div>
+
+<div class="table-container" id="tableContainer" style="display: none;">
+    <h3>📋 Filtered Data (Showing Top 100)</h3>
+    <div class="table-wrapper">
+      <table id="dataTable">
+        <thead>
+          <tr>
+            <th>Grid ID</th>
+            <th>Month</th>
+            <th>Week</th>
+            <th>Status</th>
+            <th>Total Complete</th>
+            <th>Pending UIDs</th>
+            <th>SFH Pending</th>
+          </tr>
+        </thead>
+        <tbody>
+          </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <script src="script.js"></script>
+
+</body>
+</html>
