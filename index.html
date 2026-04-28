@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WBR Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style3.css">
   <style>
   /* 🔥 ULTIMATE OVERRIDE: Bypassing CSS Cache */
   .chart-card, 
@@ -30,6 +30,7 @@
       <button id="themeToggle" class="theme-btn">🌙</button>
     </div>
     <p style="margin-top: 10px;">Upload your WBR file to generate insights</p>
+    <div id="liveClock" class="clock-display"></div>
   </div>
 
 <div class="upload-box">
@@ -108,6 +109,21 @@
       <h3>Grids Given by Arun</h3>
       <h1 id="arunGridsCount">-</h1>
     </div>
+      <div class="card c10">
+      <h3>Overall Completion %</h3>
+      <h1 id="avgTotalCompletion">-</h1>
+      <div class="card-progress-track">
+        <div id="avgTotalBar" class="card-progress-fill"></div>
+      </div>
+    </div>
+
+    <div class="card c11">
+      <h3>SFH Completion %</h3>
+      <h1 id="avgSfhCompletion">-</h1>
+      <div class="card-progress-track">
+        <div id="avgSfhBar" class="card-progress-fill"></div>
+      </div>
+    </div>
 
     <div class="card c1">
       <h3>Grids Processed (100% Complete)</h3>
@@ -143,6 +159,8 @@
       <h1 id="lowPendingCount">-</h1>
     </div>
   </div>
+
+
 
 <div class="charts-container">
   
@@ -189,10 +207,10 @@
       </table>
     </div>
   </div>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-  <script src="script.js"></script>
+  <script src="script3.js"></script>
 
 </body>
 </html>
