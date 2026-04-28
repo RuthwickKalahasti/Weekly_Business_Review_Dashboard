@@ -6,6 +6,8 @@ let barChartInstance = null;
 let pieChartInstance = null;
 let top10ChartInstance = null; // 🔥 ADD THIS LINE
 let globalArunGrids = "-"; // 🔥 NEW: Store Arun's grids globally
+let staticTotalCompletion = "-"; // 🔥 Stores Overall %
+let staticSfhCompletion = "-";   // 🔥 Stores SFH %
 
 document.addEventListener("DOMContentLoaded", function () {
   const fileInput = document.getElementById("fileInput");
@@ -39,6 +41,35 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+// function handleFile(e) {
+//   const file = e.target.files[0];
+//   if (!file) return;
+
+//   const reader = new FileReader();
+
+//   reader.onload = function (event) {
+//     const data = new Uint8Array(event.target.result);
+//     const workbook = XLSX.read(data, { type: "array" });
+//     const sheet = workbook.Sheets[workbook.SheetNames[0]];
+
+//     // 🔥 NEW: Extract "Grids given by Arun" from Cell B1 before parsing the rest of the sheet
+//     const cellB1 = sheet['B1'] ? String(sheet['B1'].v) : "";
+//     const arunMatch = cellB1.match(/\d+/); // Finds the first number in the text
+//     globalArunGrids = arunMatch ? arunMatch[0] : "-";
+
+//     globalExcelData = XLSX.utils.sheet_to_json(sheet, { range: 1 });
+    
+//     if (globalExcelData.length > 0) {
+//       identifyColumns(globalExcelData[0]);
+//       populateSlicers(globalExcelData);
+//       document.getElementById("filtersContainer").style.display = "flex";
+//       document.getElementById("tableContainer").style.display = "block"; // 🔥 Paste this on the new Line 44
+//       applyFilters();
+//     }
+//   };
+//   reader.readAsArrayBuffer(file);
+// }
+
 function handleFile(e) {
   const file = e.target.files[0];
   if (!file) return;
@@ -50,24 +81,83 @@ function handleFile(e) {
     const workbook = XLSX.read(data, { type: "array" });
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
 
-    // 🔥 NEW: Extract "Grids given by Arun" from Cell B1 before parsing the rest of the sheet
-    const cellB1 = sheet['B1'] ? String(sheet['B1'].v) : "";
-    const arunMatch = cellB1.match(/\d+/); // Finds the first number in the text
-    globalArunGrids = arunMatch ? arunMatch[0] : "-";
+    // 🔥 NEW: Read the file as a raw 2D grid so we can scan the whole thing
+    const raw2DData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    
+    // Reset values in case the user uploads a new file
+    globalArunGrids = "-";
+    staticTotalCompletion = "-";
+    staticSfhCompletion = "-";
 
+    // 🔥 BULLETPROOF SCANNER: Scans the grid and ignores Excel formatting quirks
+    raw2DData.forEach(row => {
+      row.forEach((cell, index) => {
+        if (typeof cell === "string") {
+          // Normalize text: make it lowercase and remove extra spaces
+          const text = cell.trim().toLowerCase();
+
+          // Helper function: Finds the very next actual value in the row (bypasses empty/merged cells)
+          const findNextValue = (currentIndex) => {
+            for (let i = currentIndex + 1; i < row.length; i++) {
+              if (row[i] !== undefined && row[i] !== null && row[i] !== "") {
+                return row[i];
+              }
+            }
+            return null;
+          };
+
+          // Helper function: Guarantees the value ends up as a neat string with a "%" sign
+          const formatToPercent = (val) => {
+            if (val === null) return "-";
+            if (typeof val === "number") {
+              return val <= 1 ? (val * 100).toFixed(2) + "%" : val.toFixed(2) + "%";
+            }
+            // If it's a string that already has a %, keep it. Otherwise, force it to 2 decimals and add %.
+            let strVal = String(val).trim();
+            if (strVal.includes("%")) return strVal;
+            let floatVal = parseFloat(strVal);
+            return isNaN(floatVal) ? "-" : floatVal.toFixed(2) + "%";
+          };
+
+          // 1. Find Arun's Grids anywhere in the file
+          if (text.includes("arun")) {
+            let nextVal = findNextValue(index);
+            if (nextVal) globalArunGrids = String(nextVal).match(/\d+/)?.[0] || "-";
+          }
+
+          // 2. Find "Completion %" (We make sure it doesn't accidentally trigger on the SFH row)
+          if ((text.includes("completion %") || text.includes("completion%")) && !text.includes("sfh")) {
+            staticTotalCompletion = formatToPercent(findNextValue(index));
+          }
+
+          // 3. Find "SFH Completion %"
+          if (text.includes("sfh completion %") || text.includes("sfh completion%")) {
+            staticSfhCompletion = formatToPercent(findNextValue(index));
+          }
+        }
+      });
+    });
+
+    // Fallback for Arun's grids if the scanner didn't catch it (keeps your old logic safe)
+    if (globalArunGrids === "-") {
+      const cellB1 = sheet['B1'] ? String(sheet['B1'].v) : "";
+      const arunMatch = cellB1.match(/\d+/);
+      globalArunGrids = arunMatch ? arunMatch[0] : "-";
+    }
+
+    // Parse the actual table data for the rest of the dashboard
     globalExcelData = XLSX.utils.sheet_to_json(sheet, { range: 1 });
     
     if (globalExcelData.length > 0) {
       identifyColumns(globalExcelData[0]);
       populateSlicers(globalExcelData);
       document.getElementById("filtersContainer").style.display = "flex";
-      document.getElementById("tableContainer").style.display = "block"; // 🔥 Paste this on the new Line 44
+      document.getElementById("tableContainer").style.display = "block";
       applyFilters();
     }
   };
   reader.readAsArrayBuffer(file);
 }
-
 function identifyColumns(sampleRow) {
   const keys = Object.keys(sampleRow);
   colMapping.month = keys.find(k => k.toLowerCase() === "month");
@@ -158,6 +248,63 @@ function applyFilters() {
   calculateAndRender(currentFilteredData);
 }
 
+// function calculateAndRender(data) {
+//   const is100 = (val) => {
+//     let p = parsePercent(val);
+//     return p !== null && p >= 99.9;
+//   };
+
+//   const gridsCount = data.filter(r => is100(r[colMapping.totalComplete])).length;
+//   const backlogPostCount = data.filter(r => r[colMapping.postComplete] !== undefined && !is100(r[colMapping.postComplete])).length;
+//   const sfhBacklogCount = data.filter(r => r[colMapping.sfhComplete] !== undefined && !is100(r[colMapping.sfhComplete])).length;
+//   const totalBacklogCount = data.filter(r => r[colMapping.totalComplete] !== undefined && !is100(r[colMapping.totalComplete])).length;
+
+//   let totalPending = 0, sfhPending = 0, lowPendingCount = 0;
+
+//   data.forEach(r => {
+//     let pUIDs = Number(r[colMapping.pendingUids]) || 0;
+//     let sfhUIDs = Number(r[colMapping.sfhPendingUids]) || 0;
+    
+//     totalPending += pUIDs;
+//     sfhPending += sfhUIDs;
+    
+//     let pendingVal = r[colMapping.pendingUids];
+//     if (pendingVal !== undefined && pendingVal !== null && pendingVal !== "") {
+//         let num = Number(pendingVal);
+//         if (!isNaN(num) && num <= 20) {
+//             lowPendingCount++;
+//         }
+//     }
+//   });
+
+//   // 🔥 NEW: Calculate dynamic total grids
+//   const dynamicTotalGrids = gridsCount + totalBacklogCount;
+
+//   // Update HTML text
+//   document.getElementById("dynamicTotalGrids").innerText = dynamicTotalGrids;
+//   document.getElementById("arunGridsCount").innerText = globalArunGrids;
+//   document.getElementById("gridsCount").innerText = gridsCount;
+//   document.getElementById("backlogPostCount").innerText = backlogPostCount;
+//   document.getElementById("sfhBacklogCount").innerText = sfhBacklogCount;
+//   document.getElementById("totalBacklogCount").innerText = totalBacklogCount;
+//   document.getElementById("totalPendingCount").innerText = totalPending;
+//   document.getElementById("sfhPendingCount").innerText = sfhPending;
+//   document.getElementById("lowPendingCount").innerText = lowPendingCount;
+  
+
+//   renderCharts(gridsCount, backlogPostCount, sfhBacklogCount, totalBacklogCount, data);
+//   renderTable(data); // 🔥 Paste this right below the charts
+
+//   // 🔥 Trigger the entrance animations
+//   document.querySelectorAll('.chart-card, .table-container').forEach((el, index) => {
+//     el.classList.remove('animate-pop'); // Reset animation
+//     void el.offsetWidth; // Force browser to acknowledge the reset
+//     el.style.animationDelay = `${index * 0.15}s`; // Stagger the pop-ins!
+//     el.classList.add('animate-pop'); // Start animation
+//   });
+
+// }
+
 function calculateAndRender(data) {
   const is100 = (val) => {
     let p = parsePercent(val);
@@ -187,12 +334,19 @@ function calculateAndRender(data) {
     }
   });
 
-  // 🔥 NEW: Calculate dynamic total grids
   const dynamicTotalGrids = gridsCount + totalBacklogCount;
 
-  // Update HTML text
+  // 1. Update text for standard cards
   document.getElementById("dynamicTotalGrids").innerText = dynamicTotalGrids;
   document.getElementById("arunGridsCount").innerText = globalArunGrids;
+  
+  // 🚀 2. UPDATE PROGRESS CARDS (Text & Animation)
+  document.getElementById("avgTotalCompletion").innerText = staticTotalCompletion;
+  document.getElementById("avgSfhCompletion").innerText = staticSfhCompletion;
+  document.getElementById("avgTotalBar").style.width = staticTotalCompletion !== "-" ? staticTotalCompletion : "0%";
+  document.getElementById("avgSfhBar").style.width = staticSfhCompletion !== "-" ? staticSfhCompletion : "0%";
+
+  // 3. Update the rest of the text
   document.getElementById("gridsCount").innerText = gridsCount;
   document.getElementById("backlogPostCount").innerText = backlogPostCount;
   document.getElementById("sfhBacklogCount").innerText = sfhBacklogCount;
@@ -202,16 +356,15 @@ function calculateAndRender(data) {
   document.getElementById("lowPendingCount").innerText = lowPendingCount;
 
   renderCharts(gridsCount, backlogPostCount, sfhBacklogCount, totalBacklogCount, data);
-  renderTable(data); // 🔥 Paste this right below the charts
+  renderTable(data); 
 
-  // 🔥 Trigger the entrance animations
+  // Entrance animations
   document.querySelectorAll('.chart-card, .table-container').forEach((el, index) => {
-    el.classList.remove('animate-pop'); // Reset animation
-    void el.offsetWidth; // Force browser to acknowledge the reset
-    el.style.animationDelay = `${index * 0.15}s`; // Stagger the pop-ins!
-    el.classList.add('animate-pop'); // Start animation
+    el.classList.remove('animate-pop'); 
+    void el.offsetWidth; 
+    el.style.animationDelay = `${index * 0.15}s`; 
+    el.classList.add('animate-pop'); 
   });
-
 }
 
 function renderCharts(gridsCount, backlogPostCount, sfhBacklogCount, totalBacklogCount, data) {
@@ -355,66 +508,6 @@ document.getElementById("exportBtn")?.addEventListener("click", function() {
   XLSX.writeFile(workbook, "WBR_Filtered_Data.xlsx");
 });
 
-/* ========================================= */
-/* 📥 CLICK-TO-DOWNLOAD CARD LOGIC           */
-/* ========================================= */
-
-// 1. Helper function to trigger CSV download
-// function downloadCSV(filename, csvArray) {
-//   const csvContent = "data:text/csv;charset=utf-8," + csvArray.map(e => e.join(",")).join("\n");
-//   const encodedUri = encodeURI(csvContent);
-//   const link = document.createElement("a");
-//   link.setAttribute("href", encodedUri);
-//   link.setAttribute("download", filename);
-//   document.body.appendChild(link);
-//   link.click();
-//   document.body.removeChild(link);
-// }
-
-// // 2. Attach click listener to the Backlog Card
-// document.addEventListener("DOMContentLoaded", function () {
-//   const backlogCard = document.getElementById("downloadBacklogCard");
-  
-//   if (backlogCard) {
-//     backlogCard.addEventListener("click", function () {
-//       // Check if data is loaded
-//       if (!currentFilteredData || currentFilteredData.length === 0) {
-//         alert("Please upload a file and generate the dashboard first.");
-//         return;
-//       }
-
-//       // Prepare the header row for our Excel/CSV file
-//       const csvData = [["Grid ID", "Pending UPIDs"]];
-//       const seenGrids = new Set(); // To ensure we only get unique grids
-
-//       // Loop through the currently filtered data
-//       currentFilteredData.forEach(row => {
-//         const gridId = row[colMapping.gridId];
-//         const pendingUPIDs = parseInt(row[colMapping.pendingUids]) || 0;
-//         const totalComplete = parseFloat(row[colMapping.totalComplete]) || 0;
-
-//         // 🔥 FILTER LOGIC: Grids in Backlog 
-//         // Adjust this IF statement if your definition of "Backlog" is different.
-//         // Here we check if the grid is not 100% complete and has pending UPIDs.
-//         const isBacklog = (totalComplete < 1 && totalComplete < 100) || pendingUPIDs > 0;
-
-//         if (isBacklog && gridId && !seenGrids.has(gridId)) {
-//           seenGrids.add(gridId); // Mark as seen so we don't duplicate
-//           csvData.push([gridId, pendingUPIDs]); // Add row to Excel
-//         }
-//       });
-
-//       // Check if we actually found any data
-//       if (csvData.length === 1) {
-//         alert("No backlog grids found for the current filters.");
-//         return;
-//       }
-
-//       // Trigger the download!
-//       downloadCSV("Backlog_Grids_Report.csv", csvData);
-//     });
-//   }
-// });
 
 function downloadCSV(filename, csvArray) {
   const csvContent = "data:text/csv;charset=utf-8," + csvArray.map(e => e.join(",")).join("\n");
@@ -496,3 +589,35 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+/* ========================================= */
+/* ⏰ LIVE CLOCK LOGIC                       */
+/* ========================================= */
+function startLiveClock() {
+  const clockElement = document.getElementById("liveClock");
+  if (!clockElement) return;
+
+  function updateTime() {
+    const now = new Date();
+    
+    // Formatting the date and time
+    const options = { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric', 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit' 
+    };
+    
+    clockElement.innerText = now.toLocaleDateString('en-US', options);
+  }
+
+  // Run it immediately once, then every 1000ms (1 second)
+  updateTime();
+  setInterval(updateTime, 1000);
+}
+
+// Start the clock when the page loads
+document.addEventListener("DOMContentLoaded", startLiveClock);
