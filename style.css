@@ -1,6 +1,7 @@
 /* 🌈 GLOBAL */
+/* 🌈 GLOBAL */
 :root {
-  --bg-color: #f4f7fa;
+  --bg-color: #c2c8d1; /* 🔥 FIX: Slightly darker slate-gray for better card contrast */
   --text-main: #333333;
   --text-muted: #777777;
   --card-bg: #ffffff;
@@ -666,3 +667,120 @@ body.dark-mode .table-container:hover {
   animation: slideUpFade 0.6s ease-out forwards !important;
   opacity: 0; /* Keeps them hidden until the animation starts */
 }
+
+/* ========================================= */
+/* 🌙 ULTIMATE DARK MODE VISIBILITY FIXES    */
+/* ========================================= */
+
+/* 1. Force the Main Page Background to turn dark */
+body.dark-mode {
+  background-color: #121212 !important;
+  color: #e0e0e0 !important;
+}
+
+/* 2. Force ALL Containers to turn dark gray (Fixes the white charts!) */
+body.dark-mode .card,
+body.dark-mode .chart-card,
+body.dark-mode .upload-box,
+body.dark-mode .filters-container,
+body.dark-mode .table-container {
+  background-color: #1e1e1e !important;
+  border-color: #333 !important;
+}
+
+/* 3. Bright White Text (For Main Titles & Values) */
+body.dark-mode .header h1,
+body.dark-mode .upload-box h3,
+body.dark-mode .chart-card h3,
+body.dark-mode .table-container h3,
+body.dark-mode #dataTable td strong {
+  color: #ffffff !important;
+}
+
+/* 4. Crisp Light Gray Text (For Subtitles, Labels, & Table Headers) */
+body.dark-mode .card h3,
+body.dark-mode .upload-box p,
+body.dark-mode .header p,
+body.dark-mode #fileName,
+body.dark-mode .filter-group label,
+body.dark-mode #dataTable th {
+  color: #b0bec5 !important; /* A very clean, readable light bluish-gray */
+}
+
+/* 5. Fix the Table Header Background */
+body.dark-mode #dataTable thead,
+body.dark-mode #dataTable th {
+  background-color: #2a2a2a !important;
+  border-bottom: 2px solid #444 !important;
+}
+
+/* 6. Fix Dropdowns */
+body.dark-mode .filter-group select {
+  background-color: #2a2a2a !important;
+  color: #ffffff !important;
+  border-color: #555 !important;
+}
+body.dark-mode .filter-group select option {
+  background-color: #2a2a2a !important;
+  color: #ffffff !important;
+}
+
+/* ========================================= */
+/* ⏰ LIVE CLOCK STYLES                      */
+/* ========================================= */
+.clock-display {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e88e5; /* Nice blue color for light mode */
+  margin-top: 8px;
+  letter-spacing: 0.5px;
+}
+
+body.dark-mode .clock-display {
+  color: #81c784 !important; /* Soft green for dark mode to match the theme */
+}
+
+/* ========================================= */
+/* 🚀 REFINED PROGRESS CARD STYLES           */
+/* ========================================= */
+
+/* Keep your existing border colors... */
+.card.c10 { border-top-color: #ff9800 !important; } 
+.card.c10 h1 { color: #ff9800 !important; }
+.card.c11 { border-top-color: #00bcd4 !important; } 
+.card.c11 h1 { color: #00bcd4 !important; }
+
+/* 🔥 1. NEW: Resize the percentage text so it doesn't crowd the box */
+.card.c10 h1, 
+.card.c11 h1 {
+  font-size: 32px !important; /* Slightly smaller to balance the long text */
+  margin-bottom: 5px !important; /* Forces a gap between the text and the bar */
+}
+
+/* 🔥 2. REFINED: Make the track thinner, softer, and better spaced */
+.card-progress-track {
+  width: 90%; /* Brings the edges in slightly so it doesn't touch the walls */
+  margin: 15px auto 5px auto; /* Centers it perfectly with great spacing */
+  height: 6px; /* Sleeker, thinner line */
+  background: #e2e8f0;
+  border-radius: 10px; /* Fully rounded, pill-like edges */
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.06); /* Tiny inner shadow for depth */
+}
+
+body.dark-mode .card-progress-track {
+  background: #333 !important;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
+}
+
+/* 🔥 3. REFINED: The Fill Animation */
+.card-progress-fill {
+  height: 100%;
+  width: 0%; 
+  border-radius: 10px;
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1); 
+}
+
+.card.c10 .card-progress-fill { background: #ff9800; }
+.card.c11 .card-progress-fill { background: #00bcd4; }
+
